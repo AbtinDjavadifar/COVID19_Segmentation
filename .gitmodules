@@ -1,0 +1,3 @@
+[submodule "lungmask"]
+	path = lungmask
+	url = https://github.com/JoHof/lungmask.git
