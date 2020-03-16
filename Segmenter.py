@@ -6,7 +6,7 @@ import logging
 import numpy as np
 # import pdb
 
-images_path = Path("C:/Users/djava/PycharmProjects/CoronaDetection/Data/COVID/COVID5")
+images_path = Path("C:/Users/djava/PycharmProjects/CoronaDetection/Data/COVID")
 segmentation_path = Path("C:/Users/djava/PycharmProjects/CoronaDetection/Data/Segmentations")
 dict_path = Path("C:/Users/djava/PycharmProjects/CoronaDetection/Data/Dictionaries")
 images = [f for f in os.listdir(images_path) if os.path.isdir(os.path.join(images_path, f))]
