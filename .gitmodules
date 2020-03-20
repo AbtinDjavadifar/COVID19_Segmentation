@@ -1,3 +1,6 @@
 [submodule "lungmask"]
 	path = lungmask
 	url = https://github.com/JoHof/lungmask.git
+[submodule "segmenter"]
+	path = segmenter
+	url = https://github.com/brandongk60/segmenter.git
