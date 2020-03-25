@@ -5,7 +5,6 @@ import pandas as pd
 from skimage.io import imread
 import os
 import sys
-import imageio
 
 sys.path.append("..")
 
@@ -17,7 +16,6 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 class PathologyDataset(BaseDataset):
 
     def __init__(self, path=current_dir):
-        super()
         self.path = os.path.abspath(path)
         # reading in the training set
         data = pd.read_csv(os.path.join(self.path, 'train.csv'))
@@ -38,13 +36,13 @@ class PathologyDataset(BaseDataset):
     def get_classes(self):
         return list(map(lambda x: str(x), sorted(self.filtered['ClassId'].sort_index().unique().tolist())))
 
-    def get_class_counts(self):
-        return self.filtered['ClassId'].value_counts().sort_index()
+    # def get_class_counts(self):
+    #     return self.filtered['ClassId'].value_counts().sort_index()
 
     def get_class_members(self):
         classes = {}
         for clazz in self.get_classes():
-            members = self.filtered[self.filtered["ClassId"] == int(clazz)]["ImageId"].tolist()
+            members = self.filtered[self.filtered["ClassId"] == clazz]["ImageId"].tolist()
             members = [os.path.splitext(m)[0] for m in members]
             random.shuffle(members)
             eval_instances = members[:int(len(members) / 10) + 1]
@@ -63,12 +61,15 @@ class PathologyDataset(BaseDataset):
         return instance['ImageId'][:-4]
 
     def get_image(self, instance):
-        return imread(os.path.join(self.path, 'Train', 'img', instance['ImageId']), as_gray=True).astype(np.float32)
+        image = np.array(imread(os.path.join(self.path, 'Train', 'img', instance['ImageId']), as_gray=True))
+        image = image / np.max(image)
+        return image.astype(np.float32)
 
     def get_masks(self, instance):
         mask = np.zeros((512, 512, 1), dtype=np.uint8)
-        mask[:,:,0] = np.array(imageio.imread(os.path.join(self.path, 'Train', 'ann', instance['ImageId']), as_gray=True)).astype(np.float32)
-        return mask
+        mask[:,:,0] = np.array(imread(os.path.join(self.path, 'Train', 'ann', instance['ImageId']), as_gray=True))
+        mask[mask > 0] = 1
+        return mask.astype(np.float32)
 
     def enhance_image(self, image):
         return contrast_stretch(image)
