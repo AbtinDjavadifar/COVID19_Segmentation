@@ -1,1 +1,1 @@
-from .Pathology import Pathology as Dataset
+from .PathologyDataset import PathologyDataset as Dataset
