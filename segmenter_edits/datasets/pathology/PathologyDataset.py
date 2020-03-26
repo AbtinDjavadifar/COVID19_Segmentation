@@ -42,7 +42,7 @@ class PathologyDataset(BaseDataset):
     def get_class_members(self):
         classes = {}
         for clazz in self.get_classes():
-            members = self.filtered[self.filtered["ClassId"] == clazz]["ImageId"].tolist()
+            members = self.filtered[self.filtered["ClassId"] == int(clazz)]["ImageId"].tolist()
             members = [os.path.splitext(m)[0] for m in members]
             random.shuffle(members)
             eval_instances = members[:int(len(members) / 10) + 1]
